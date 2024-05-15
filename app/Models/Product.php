@@ -29,4 +29,9 @@ class Product extends Model
     function Inventory(){
         return $this->hasMany(Inventory::class, 'product_id', 'id');
     }
+    
+    public function wishlists()
+    {
+        return $this->belongsToMany(Customer::class, 'wish_lists', 'product_id', 'customer_id');
+    }
 }

@@ -37,14 +37,7 @@
                                 <span>Joined {{ Auth::guard('customer')->user()->created_at->format('d-M-y') }}</span>
                             </div>
                         </div>
-                        <div class="order-his-page">
-                            <ul class="profile-ul">
-                                <li class="profile-li"><a href="order-history.html"><span>Orders</span> <span class="pro-count">5</span></a></li>
-                                <li class="profile-li"><a href="{{ route('customer.profile') }}" class="active">Profile</a></li>
-                                <li class="profile-li"><a href="{{ route('customer.address') }}">Address</a></li>
-                                <li class="profile-li"><a href="{{ route('customer.log.out') }}">Log Out</a></li>
-                            </ul>
-                        </div>
+                        @include('frontend.customer.partials.menus')
                     </div>
                     <div class="profile-form">
                         <form action="{{ route('customer.profile.update') }}" method="POST" enctype="multipart/form-data">

@@ -596,20 +596,34 @@
                                             </div>
                                         </li>
                                         <li class="side-wrap wishlist-wrap">
-                                            <a href="wishlist-empty.html" class="header-wishlist">
+                                            <a href="{{ route('wishlist') }}" class="header-wishlist">
                                                 <span class="wishlist-icon"><i class="fa fa-heart-o" aria-hidden="true"></i></span>
-                                                <span class="wishlist-counter">0</span>
+                                                <span class="wishlist-counter">
+                                                    @auth('customer')
+                                                    {{ Auth::guard('customer')->user()->wishlists->count() }}
+                                                    @else
+                                                    0
+                                                    @endauth</span>
                                             </a>
                                         </li>
                                         <li class="side-wrap cart-wrap">
                                             <div class="shopping-widget">
                                                 <div class="shopping-cart">
+                                                    @auth('customer')
                                                     <a href="javascript:void(0)" class="cart-count">
                                                         <span class="cart-icon-wrap">
                                                             <span class="cart-icon"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></span>
-                                                            <span id="cart-total" class="bigcounter">5</span>
+                                                            <span id="cart-total" class="bigcounter">{{ Auth::guard('customer')->user()->Cart->count() }}</span>
                                                         </span>
                                                     </a>
+                                                    @else
+                                                    <a href="{{ route('customer.login') }}" class="cart-count">
+                                                        <span class="cart-icon-wrap">
+                                                            <span class="cart-icon"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></span>
+                                                            <span id="cart-total" class="bigcounter">0</span>
+                                                        </span>
+                                                    </a>
+                                                    @endauth
                                                 </div>
                                             </div>
                                         </li>
@@ -1177,108 +1191,72 @@
             </div>
             <!-- mobile menu end -->
             <!-- minicart start -->
+            @auth('customer')
+            @php
+                $carts = Auth::guard('customer')->user()->Cart;
+                $subtotal = 0;
+            @endphp
+            @endauth
+
+
+
+            @auth('customer')
             <div class="mini-cart">
                 <a href="javascript:void(0)" class="shopping-cart-close"><i class="ion-close-round"></i></a>
                 <div class="cart-item-title">
                     <p>
                         <span class="cart-count-desc">There are</span>
-                        <span class="cart-count-item bigcounter">4</span>
+                        <span class="cart-count-item bigcounter">{{ $carts->count() }}</span>
                         <span class="cart-count-desc">Products</span>
                     </p>
                 </div>
                 <ul class="cart-item-loop">
-                    <li class="cart-item">
-                        <div class="cart-img">
-                            <a href="product-style-2.html">
-                                <img src="{{ asset('frontend/image/') }}/cart-img.jpg" alt="cart-image" class="img-fluid">
-                            </a>
-                        </div>
-                        <div class="cart-title">
-                            <h6><a href="product-style-2.html">Fresh apple 5kg</a></h6>
-                            <div class="cart-pro-info">
-                                <div class="cart-qty-price">
-                                    <span class="quantity">1 x </span>
-                                    <span class="price-box">$250.00 USD</span>
-                                </div>
-                                <div class="delete-item-cart">
-                                    <a href="empty-cart.html"><i class="icon-trash icons"></i></a>
+                    @foreach ($carts as $cart)
+                        <li class="cart-item" id="cart-item-{{ $cart->id }}">
+                            <div class="cart-img">
+                                <a href="{{ route('product.details', $cart->Product->slug) }}">
+                                    <img src="{{ asset($cart->Product->preview_img) }}" alt="cart-image" class="img-fluid">
+                                </a>
+                            </div>
+                            <div class="cart-title">
+                                <h6><a href="{{ route('product.details', $cart->Product->slug) }}">{{ $cart->Product->product_name }}</a></h6>
+                                <div class="cart-pro-info">
+                                    <div class="cart-qty-price">
+                                        <span class="quantity">{{ $cart->quantity }} x </span>
+                                        <span class="price-box">&#2547; {{ round($cart->Product->Inventory->where('color_id', $cart->color_id)->where('size_id', $cart->size_id)->first()->after_discount) }}</span>
+                                        <span class="d-block mt-1">Size: {{ $cart->Size->size_name }}</span>
+                                        <span class="d-block mt-1">Color: {{ $cart->Color->color_name }}</span>
+                                    </div>
+                                    <div class="delete-item-cart">
+                                        <a href="#" class="delete-cart-item" data-cart-id="{{ $cart->id }}">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+
                                 </div>
                             </div>
-                        </div>
-                    </li>
-                    <li class="cart-item">
-                        <div class="cart-img">
-                            <a href="product-style-2.html">
-                                <img src="{{ asset('frontend/image/') }}/cart-img02.jpg" alt="cart-image" class="img-fluid">
-                            </a>
-                        </div>
-                        <div class="cart-title">
-                            <h6><a href="product-style-2.html">Natural grassbean 4kg</a></h6>
-                            <div class="cart-pro-info">
-                                <div class="cart-qty-price">
-                                    <span class="quantity">1 x </span>
-                                    <span class="price-box">$300.00 USD</span>
-                                </div>
-                                <div class="delete-item-cart">
-                                    <a href="empty-cart.html"><i class="icon-trash icons"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="cart-item">
-                        <div class="cart-img">
-                            <a href="product-style-2.html">
-                                <img src="{{ asset('frontend/image/') }}/cart-img03.jpg" alt="cart-image" class="img-fluid">
-                            </a>
-                        </div>
-                        <div class="cart-title">
-                            <h6><a href="product-style-2.html">Organic coconut juice 5ltr</a></h6>
-                            <div class="cart-pro-info">
-                                <div class="cart-qty-price">
-                                    <span class="quantity">1 x </span>
-                                    <span class="price-box">$250.00 USD</span>
-                                </div>
-                                <div class="delete-item-cart">
-                                    <a href="empty-cart.html"><i class="icon-trash icons"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="cart-item">
-                        <div class="cart-img">
-                            <a href="product-style-2.html">
-                                <img src="{{ asset('frontend/image/') }}/cart-img04.jpg" alt="cart-image" class="img-fluid">
-                            </a>
-                        </div>
-                        <div class="cart-title">
-                            <h6><a href="product-style-2.html">Orange juice 5ltr</a></h6>
-                            <div class="cart-pro-info">
-                                <div class="cart-qty-price">
-                                    <span class="quantity">1 x </span>
-                                    <span class="price-box">$350.00 USD</span>
-                                </div>
-                                <div class="delete-item-cart">
-                                    <a href="empty-cart.html"><i class="icon-trash icons"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
+                        </li>
+                        @php
+                            $subtotal += $cart->Product->Inventory->where('color_id', $cart->color_id)->where('size_id', $cart->size_id)->first()->after_discount * $cart->quantity;
+                        @endphp
+                    @endforeach
                 </ul>
                 <ul class="subtotal-title-area">
                     <li class="subtotal-info">
                         <div class="subtotal-titles">
                             <h6>Sub total:</h6>
-                            <span class="subtotal-price">$750.00 USD</span>
+                            <span class="subtotal-price">&#2547; {{ $subtotal }}</span>
                         </div>
                     </li>
                     <li class="mini-cart-btns">
                         <div class="cart-btns">
-                            <a href="cart-2.html" class="btn btn-style2">View cart</a>
+                            <a href="{{ route('cart.page') }}" class="btn btn-style2">View cart</a>
                             <a href="checkout-2.html" class="btn btn-style2">Checkout</a>
                         </div>
                     </li>
                 </ul>
             </div>
+            @endauth
             <!-- minicart end -->
             <!-- search start -->
             <div class="modal fade" id="search-modal">
@@ -1502,6 +1480,49 @@
         <!-- custom -->
         <script src="{{ asset('frontend/js/') }}/custom.js"></script>
         @yield('script')
+        <script>
+            $('.delete-cart-item').click(function(e) {
+                    e.preventDefault();
+                    var cartId = $(this).data('cart-id');
+                    var url = "{{ route('cart.delete') }}";
+
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        data: {
+                            cart_id: cartId,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            // For example, you could remove the deleted cart item from the UI
+                            $('#cart-item-' + cartId).remove();
+                            updateCartCount()
+                        },
+                        error: function(xhr) {
+                            // Handle error
+                            console.log(xhr.responseText);
+                        }
+                    });
+            });
+
+            function updateCartCount(){
+                $.ajax({
+                        url: '{{ route('get.cart.count') }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            // For example, you could remove the deleted cart item from the UI
+                            $('#cart-total').html(response);
+                        },
+                        error: function(xhr) {
+                            // Handle error
+                            console.log(xhr.responseText);
+                        }
+                    });
+            }
+        </script>
     </body>
 
 <!-- Mirrored from spacingtech.com/html/vegist-final/vegist/index2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 13 Jan 2024 10:41:12 GMT -->

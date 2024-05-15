@@ -65,6 +65,12 @@ class CustomerController extends Controller
             'countries'=> $countries
         ]);
     }
+    function CustomerOrders(){
+        $orders = Auth::guard('customer')->user()->Orders;
+        return view('frontend.customer.orders', [
+            'orders'=> $orders
+        ]);
+    }
     function CustomerLogOut(){
         Auth::guard('customer')->logout();
         return redirect()->route('index');

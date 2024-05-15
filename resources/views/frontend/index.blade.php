@@ -197,14 +197,14 @@
                                     <div class="tr-pro-img">
                                         <a href="{{ route('product.details', $product->slug) }}">
                                             <img class="img-fluid" src="{{ asset($product->preview_img) }}" alt="pro-img1">
-                                            <img class="img-fluid additional-image" src="{{ asset($product->preview_img) }}" alt="additional image">
+                                            <img class="img-fluid additional-image" src="{{ asset($product->Gallery->first()->gallery_path) }}" alt="additional image">
                                         </a>
                                     </div>
                                     <div class="Pro-lable">
                                         <span class="p-discount">- {{ $product->discount }}%</span>
                                     </div>
                                     <div class="pro-icn">
-                                        <a href="wishlist.html" class="w-c-q-icn"><i class="fa fa-heart"></i></a>
+                                        <a style="cursor: pointer" data-slug="{{ $product->slug }}" class="w-c-q-icn wishlist"><i class="fa fa-heart"></i></a>
                                         <a href="cart.html" class="w-c-q-icn"><i class="fa fa-shopping-bag"></i></a>
                                         <a href="javascript:void(0)"  class="w-c-q-icn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a>
                                     </div>
@@ -219,7 +219,7 @@
                                         <i class="fa fa-star-o"></i>
                                     </div>
                                     <div class="pro-price">
-                                        <span class="new-price">&#2547; {{ $product->Inventory->first()->after_discount }}</span>
+                                        <span class="new-price">&#2547; {{ round($product->Inventory->first()->after_discount) }}</span>
                                         <span class="old-price"><del>&#2547; {{ $product->Inventory->first()->price }}</del></span>
                                     </div>
                                 </div>
@@ -324,6 +324,7 @@
                                                         <div class="tr-pro-img">
                                                             <a href="{{ route('product.details', $product->slug) }}">
                                                                 <img src="{{ asset($product->preview_img) }}" alt="pro-img1" class="img-fluid">
+                                                                <img class="img-fluid additional-image" src="{{ asset($product->Gallery->first()->gallery_path) }}" alt="additional image">
                                                             </a>
                                                         </div>
                                                         <div class="Pro-lable">
@@ -346,12 +347,12 @@
                                                         </div>
                                                         @else
                                                         <div class="pro-price">
-                                                            <span class="new-price">&#2547; {{ $product->Inventory->first()->after_discount }}</span>
+                                                            <span class="new-price">&#2547; {{ round($product->Inventory->first()->after_discount) }}</span>
                                                         </div>
                                                         @endif
                                                         <div class="pro-icn">
-                                                            <a href="wishlist.html" class="w-c-q-icn"><i class="fa fa-heart"></i></a>
-                                                            <a href="cart.html" class="w-c-q-icn"><i class="fa fa-shopping-bag"></i></a>
+                                                            <a style="cursor: pointer" data-slug="{{ $product->slug }}" class="w-c-q-icn wishlist"><i class="fa fa-heart"></i></a>
+                                                            <a href="cart.html" class="w-c-q-icn wishlist"><i class="fa fa-shopping-bag"></i></a>
                                                             <a href="javascript:void(0)"  class="w-c-q-icn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a>
                                                         </div>
                                                     </div>
@@ -377,6 +378,7 @@
                                                         <div class="tr-pro-img">
                                                             <a href="">
                                                                 <img src="{{ asset($product->preview_img) }}" alt="pro-img1" class="img-fluid">
+                                                                <img class="img-fluid additional-image" src="{{ asset($product->Gallery->first()->gallery_path) }}" alt="additional image">
                                                             </a>
                                                         </div>
                                                         <div class="Pro-lable">
@@ -392,12 +394,18 @@
                                                             <i class="fa fa-star e-star"></i>
                                                             <i class="fa fa-star e-star"></i>
                                                         </div>
+                                                        @if ($product->discount)
                                                         <div class="pro-price">
-                                                            <span class="new-price">$580.00 USD</span>
-                                                            <span class="old-price"><del>$590.00 USD</del></span>
+                                                            <span class="new-price">&#2547; {{ $product->Inventory->first()->after_discount }}</span>
+                                                            <span class="old-price"><del>&#2547; {{ $product->Inventory->first()->price }}</del></span>
                                                         </div>
+                                                        @else
+                                                        <div class="pro-price">
+                                                            <span class="new-price">&#2547; {{ round($product->Inventory->first()->after_discount) }}</span>
+                                                        </div>
+                                                        @endif
                                                         <div class="pro-icn">
-                                                            <a href="wishlist.html" class="w-c-q-icn"><i class="fa fa-heart"></i></a>
+                                                            <a style="cursor: pointer" data-slug="{{ $product->slug }}" class="w-c-q-icn wishlist"><i class="fa fa-heart"></i></a>
                                                             <a href="cart.html" class="w-c-q-icn"><i class="fa fa-shopping-bag"></i></a>
                                                             <a href="javascript:void(0)"  class="w-c-q-icn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a>
                                                         </div>
@@ -443,7 +451,7 @@
                                                             <span class="new-price">$93.00 USD</span>
                                                         </div>
                                                         <div class="pro-icn">
-                                                            <a href="wishlist.html" class="w-c-q-icn"><i class="fa fa-heart"></i></a>
+                                                            <a style="cursor: pointer" data-slug="{{ $product->slug }}" class="w-c-q-icn wishlist"><i class="fa fa-heart"></i></a>
                                                             <a href="cart.html" class="w-c-q-icn"><i class="fa fa-shopping-bag"></i></a>
                                                             <a href="javascript:void(0)"  class="w-c-q-icn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a>
                                                         </div>
@@ -1110,14 +1118,14 @@
                                     <div class="tr-pro-img">
                                         <a href="{{ route('product.details', $product->slug) }}">
                                             <img class="img-fluid" src="{{ asset($product->preview_img) }}" alt="pro-img1">
-                                            <img class="img-fluid additional-image" src="{{ asset($product->preview_img) }}" alt="additional image">
+                                            <img class="img-fluid additional-image" src="{{ asset($product->Gallery->first()->gallery_path) }}" alt="additional image">
                                         </a>
                                     </div>
                                     <div class="Pro-lable">
                                         <span class="{{ $product->discount ? 'p-discount' : 'p-text' }}">{{ $product->discount ? '- '.$product->discount.'%' : 'new' }}</span>
                                     </div>
                                     <div class="pro-icn">
-                                        <a href="wishlist.html" class="w-c-q-icn"><i class="fa fa-heart"></i></a>
+                                        <a style="cursor: pointer" data-slug="{{ $product->slug }}" class="w-c-q-icn wishlist"><i class="fa fa-heart"></i></a>
                                         <a href="cart.html" class="w-c-q-icn"><i class="fa fa-shopping-bag"></i></a>
                                         <a href="javascript:void(0)"  class="w-c-q-icn" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-eye"></i></a>
                                     </div>
@@ -1491,4 +1499,43 @@
             </div>
         </section>
         <!-- quick veiw end -->
+@endsection
+@section('script')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $('.wishlist').on('click', function(){
+            StoreWishlist($(this).data('slug'))
+        })
+
+        function StoreWishlist(slug){
+            $.ajax({
+                url: '{{ route('store.wishlist') }}',
+                type: 'POST',
+                data: {
+                    slug: slug,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    console.log(response)
+                    Swal.fire({
+                    title: response.message,
+                    icon: "success"
+                    }).then((result) => {
+                        if (result.isConfirmed || result.isDismissed) {
+                            location.reload(); // Reload the page when the user clicks OK or outside the alert
+                        }
+                    });
+                    //window.location.href = "{{ route('order.success', '') }}/" + response.order_id;
+                },
+                error: function(xhr) {
+                    // Handle error
+                    console.log(xhr.responseText);
+                },
+                complete: function () {
+                    // Re-enable the button and set the text back to 'Place order'
+                    $('.place-order').prop('disabled', false).html('Place order');
+                }
+            });
+        }
+    </script>
 @endsection

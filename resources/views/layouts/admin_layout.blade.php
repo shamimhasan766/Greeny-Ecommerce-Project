@@ -583,7 +583,7 @@
                 </a>
                 <ul>
                     <li>
-                        <a  href="orders.html">List</a>
+                        <a class="{{ request()->url() === route('order.list') ? 'active' : '' }}" href="{{ route('order.list') }}">List</a>
                     </li>
                     <li>
                         <a  href="order-detail.html">Detail</a>
@@ -752,12 +752,44 @@
                 </ul>
             </li>
             <li>
-                <a  href="customers.html">
+                <a href="#">
+                    <span class="nav-link-icon">
+                        <i class="bi bi-receipt"></i>
+                    </span>
+                    <span>Coupon</span>
+                </a>
+                <ul>
+                    <li>
+                        <a class="{{ request()->url() === route('all.coupon') ? 'active' : '' }}" href="{{ route('all.coupon') }}"
+                           >List</a>
+                    </li>
+                    <li>
+                        <a class="{{ request()->url() === route('add.coupon') ? 'active' : '' }}" href="{{ route('add.coupon') }}"
+                           >Add COupon</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a  href="{{ route('customer.list') }}">
                     <span class="nav-link-icon">
                         <i class="bi bi-person-badge"></i>
                     </span>
                     <span>Customers</span>
                 </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="nav-link-icon">
+                        <i class="bi bi-receipt"></i>
+                    </span>
+                    <span>Orders</span>
+                </a>
+                <ul>
+                    <li>
+                        <a class="{{ request()->url() === route('order.list') ? 'active' : '' }}" href="{{ route('order.list') }}"
+                           >Order List</a>
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href="#">

@@ -188,7 +188,7 @@
                             <div class="list-items">
                                 <div class="tred-pro">
                                     <div class="tr-pro-img">
-                                        <a href="product.html">
+                                        <a href="{{ route('product.details', $product->slug) }}">
                                             <img class="img-fluid" src="{{ asset($product->preview_img) }}" alt="pro-img1">
                                         </a>
                                     </div>
@@ -197,7 +197,7 @@
                                     </div>
                                 </div>
                                 <div class="caption">
-                                    <h3><a href="product.html">{{ $product->product_name }}</a></h3>
+                                    <h3><a href="{{ route('product.details', $product->slug) }}">{{ $product->product_name }}</a></h3>
                                     <p class="list-description">{{ $product->short_desc }}</p>
                                     <div class="rating">
                                         <i class="fa fa-star c-star"></i>

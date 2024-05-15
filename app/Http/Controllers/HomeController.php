@@ -83,4 +83,9 @@ class HomeController extends Controller
             'categories'=> $categories
         ]);
     }
+    function Invoice($order_id){
+        return view('frontend.mail.invoice',[
+            'order_id'=> $order_id
+        ]);
+    }
 }

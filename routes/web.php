@@ -2,16 +2,25 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\ColorController;
+use App\Http\Controllers\CouponController;
+use App\Http\Controllers\CustomerAdminController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\InvoiceDownloadController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SizeController;
+use App\Http\Controllers\SslCommerzPaymentController;
+use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\WishlistController;
 use App\Models\Color;
 use App\Models\Subcategory;
 use Illuminate\Support\Facades\Route;
@@ -25,18 +34,49 @@ Route::get('subcategory/products/{slug}', [HomeController::class, 'SubCategoryPr
 Route::get('product/details/{slug}', [HomeController::class, 'ProductDetails'])->name('product.details');
 Route::get('product/tag/{id}', [HomeController::class, 'ProductTag'])->name('tag.product');
 
+// Download Invoice
+Route::get('invoice/download/{order_id}', [InvoiceDownloadController::class, 'InvoiceDownload'])->middleware('customer.auth')->name('invoice.download');
+
+// WishList
+Route::get('wish/list', [WishlistController::class, 'Wishlist'])->name('wishlist');
+Route::post('store/wish/list', [WishlistController::class, 'StoreWishlist'])->name('store.wishlist');
+
+
+// Cart
+Route::post('store/cart', [CartController::class, 'StoreCart'])->middleware('customer.auth')->name('store.cart');
+Route::post('/get/price/quantity', [CartController::class, 'GetQuantityPrice'])->name('get.quantity.price');
+Route::post('/get/colors/', [CartController::class, 'GetColors'])->name('get.colors');
+Route::get('cart/page', [CartController::class, 'CartPage'])->middleware('customer.auth')->name('cart.page');
+Route::post('update/cart/quantity', [CartController::class, 'UpdateCartQuantity'])->middleware('customer.auth')->name('update.cart.quantity');
+Route::delete('cart/delete', [CartController::class, 'CartDelete'])->middleware('customer.auth')->name('cart.delete');
+Route::post('get/cart/count', [CartController::class, 'GetCartCount'])->middleware('customer.auth')->name('get.cart.count');
+Route::post('get/coupon', [CartController::class, 'GetCoupon'])->middleware('customer.auth')->name('get.coupon');
+
+// CheckOut
+Route::get('checkout/page', [CheckOutController::class, 'CheckOutPage'])->middleware('customer.auth')->name('checkout.page');
+Route::post('store/billing', [CheckOutController::class, 'StoreBilling'])->middleware('customer.auth')->name('store.billing');
+Route::post('store/shipping', [CheckOutController::class, 'StoreShipping'])->middleware('customer.auth')->name('store.shipping');
+Route::post('get/shipping/address', [CheckOutController::class, 'GetShippingAddress'])->middleware('customer.auth')->name('get.shipping.address');
+Route::delete('delete/shipping/address', [CheckOutController::class, 'DeleteShipping'])->middleware('customer.auth')->name('delete.shipping.address');
+Route::post('get/shipping/details', [CheckOutController::class, 'GetShippingDetails'])->middleware('customer.auth')->name('get.shipping.details');
+Route::post('store/order', [CheckOutController::class, 'StoreOrder'])->middleware('customer.auth')->name('store.order');
+Route::get('order/success/{order_id}', [CheckOutController::class, 'OrderSuccess'])->middleware('customer.auth')->name('order.success');
+Route::get('tracking/order/{order_id}', [CheckOutController::class, 'TrackingOrder'])->middleware('customer.auth')->name('tracking.order');
+Route::post('cancel/order', [CheckOutController::class, 'CancelOrder'])->middleware('customer.auth')->name('cancel.order');
+Route::post('ssl/order', [CheckOutController::class, 'SSLOrder'])->middleware('customer.auth')->name('ssl.order');
 
 // Customer Authentication
 Route::get('customer/login', [CustomerController::class, 'CustomerLogin'])->name('customer.login');
 Route::get('customer/register', [CustomerController::class, 'CustomerRegister'])->name('customer.register');
 Route::post('store/customer', [CustomerController::class, 'StoreCustomer'])->name('store.customer');
 Route::post('login/customer', [CustomerController::class, 'LoginCustomer'])->name('login.customer');
-Route::get('customer/profile', [CustomerController::class, 'CustomerProfile'])->name('customer.profile');
-Route::get('customer/address', [CustomerController::class, 'CustomerAddress'])->name('customer.address');
+Route::get('customer/profile', [CustomerController::class, 'CustomerProfile'])->middleware('customer.auth')->name('customer.profile');
+Route::get('customer/address', [CustomerController::class, 'CustomerAddress'])->middleware('customer.auth')->name('customer.address');
+Route::get('customer/orders', [CustomerController::class, 'CustomerOrders'])->middleware('customer.auth')->name('customer.orders');
 Route::get('customer/log/out', [CustomerController::class, 'CustomerLogOut'])->name('customer.log.out');
-Route::post('customer/profile/update', [CustomerController::class, 'CustomerProfileUpdate'])->name('customer.profile.update');
-Route::post('customer/address/update', [CustomerController::class, 'CustomerAddressUpdate'])->name('customer.address.update');
-Route::post('customer/get/city', [CustomerController::class, 'CustomerGetCity'])->name('customer.get.city');
+Route::post('customer/profile/update', [CustomerController::class, 'CustomerProfileUpdate'])->middleware('customer.auth')->name('customer.profile.update');
+Route::post('customer/address/update', [CustomerController::class, 'CustomerAddressUpdate'])->middleware('customer.auth')->name('customer.address.update');
+Route::post('customer/get/city', [CustomerController::class, 'CustomerGetCity'])->middleware('customer.auth')->name('customer.get.city');
 
 
 // ------Admin Controller-------
@@ -109,6 +149,22 @@ Route::get('product/delete/{id}', [ProductController::class, 'DeleteProduct'])->
 Route::get('restore/product/{id}', [ProductController::class, 'RestoreProduct'])->middleware('auth', 'verified')->name('restore.product');
 Route::get('product/force/delete/{id}', [ProductController::class, 'ProductForceDelete'])->middleware('auth', 'verified')->name('product.force.delete');
 
+// Coupon
+Route::get('add/coupon', [CouponController::class, 'AddCoupon'])->middleware('auth', 'verified')->name('add.coupon');
+Route::get('all/coupon', [CouponController::class, 'AllCoupon'])->middleware('auth', 'verified')->name('all.coupon');
+Route::post('store/coupon', [CouponController::class, 'StoreCoupon'])->middleware('auth', 'verified')->name('store.coupon');
+
+
+// Customer
+Route::get('customer/list', [CustomerAdminController::class, 'CustomerList'])->middleware('auth', 'verified')->name('customer.list');
+
+
+// Order
+Route::get('order/list', [OrderController::class, 'OrderList'])->middleware('auth', 'verified')->name('order.list');
+Route::get('order/details/view/{id}', [OrderController::class, 'OrderDetailsView'])->middleware('auth', 'verified')->name('order.details.view');
+Route::post('order/status/change/{id}', [OrderController::class, 'OrderStatusChange'])->middleware('auth', 'verified')->name('order.status.change');
+
+
 
 // Inventory
 
@@ -139,10 +195,23 @@ Route::post('inventory/store/{id}', [InventoryController::class, 'InventoryStore
 Route::get('delete/inventory/{id}', [InventoryController::class, 'InventoryDelete'])->middleware('auth', 'verified')->name('delete.inventory');
 
 
+// SSLCOMMERZ Start
+Route::get('/pay', [SslCommerzPaymentController::class, 'index']);
+Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+
+Route::post('/success', [SslCommerzPaymentController::class, 'success']);
+Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
+Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
+
+Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
 
 
-
-
+// Stripe
+Route::controller(StripePaymentController::class)->group(function(){
+    Route::get('/stripe/json', 'stripeJson');
+    Route::get('/stripe', 'stripe')->name('stripe.pay');
+    Route::post('stripe/post', 'stripePost')->name('stripe.post');
+});
 
 
 
